@@ -1,0 +1,19 @@
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore environment or credentials
+*.env
+*.ini
+config.php
+
+# Ignore editor and IDE settings
+.vscode/
+.idea/
+
+# Ignore temporary or log files
+*.log
+*.tmp
+
+# Ignore XAMPP/WAMP local paths
+htdocs/
