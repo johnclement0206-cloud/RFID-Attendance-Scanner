@@ -1,4 +1,10 @@
 <?php
+
+/*
+main API for grabbing info from 
+rfid_logger.py to put into SQL db
+*/
+
 $servername = "localhost";
 $username = "attendance_admin";
 $password = "secure_password";
