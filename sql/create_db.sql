@@ -1,3 +1,5 @@
+-- main database for taking and storing info for use
+
 CREATE DATABASE rfid_attendance;
 USE rfid_attendance;
 
