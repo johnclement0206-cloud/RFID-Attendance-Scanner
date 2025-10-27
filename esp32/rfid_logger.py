@@ -3,11 +3,11 @@ import network #type: ignore
 import time
 
 # wifi credentials - school wifi
-# SSID = (net name, str)
-# PASSWORD = (wifi pass, keep as str)
+SSID = ("net name, str")
+PASSWORD = ("wfi pass, keep as str")
 
 # API endpoint
-# API_URL = (need PHP web hook here) - currently in comment mode because no PHP
+API_URL = ("need PHP web hook here")
 # PHP hook in the form of: http://(ip add of current device maintaining db)/api/insert_log.php
 
 # connect to wifi
