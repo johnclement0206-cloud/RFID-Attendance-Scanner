@@ -11,7 +11,7 @@ PASSWORD = "fbtksa786"
 # API endpoint - update this with server IP
 API_URL = "http://<your-server-ip>/api/insert_log.php"
 
-# RFID Reader pins
+# RFID Reader pins (edit with actual pin used)
 RFID_RX_PIN = 16
 RFID_TX_PIN = 17
 RFID_BAUD_RATE = 9600
