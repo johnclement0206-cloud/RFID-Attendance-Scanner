@@ -2,8 +2,9 @@
 info and code for a local-only attendance scanner using RFID scanners within FBT-I premises.
 
 Creators:
+- Alobaid, Nouf A.
 - Cabato, Ma. Jessica Paula S.
 - Calisaan, Princess Gefren M. 
 - Catal, Diego D. 
 - Ibrahim, John Clement J.
-- Sales, Augustus Vidal S. 
+- Sales, Augustus Vidal S.
