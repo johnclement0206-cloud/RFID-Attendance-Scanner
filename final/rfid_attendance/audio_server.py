@@ -55,6 +55,7 @@ success_sound = create_success_sound()
 error_sound = create_error_sound()
 scan_sound = create_scan_sound()
 
+# one beep = scan, three = success, five = failed
 @app.route('/sound/scan', methods=['POST'])
 def play_scan():
     scan_sound.play()
@@ -62,12 +63,12 @@ def play_scan():
 
 @app.route('/sound/success', methods=['POST'])
 def play_success():
-    success_sound.play()
+    success_sound.play(loops=3)
     return jsonify({"status": "played"}), 200
 
 @app.route('/sound/error', methods=['POST'])
 def play_error():
-    error_sound.play()
+    error_sound.play(loops=5)
     return jsonify({"status": "played"}), 200
 
 if __name__ == '__main__':
