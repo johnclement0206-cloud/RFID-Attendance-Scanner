@@ -5,7 +5,6 @@ Thumbs.db
 # Ignore environment or credentials
 *.env
 *.ini
-config.php
 
 # Ignore editor and IDE settings
 .vscode/
