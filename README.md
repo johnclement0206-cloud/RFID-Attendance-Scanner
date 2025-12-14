@@ -8,3 +8,5 @@ Creators:
 - Catal, Diego D. 
 - Ibrahim, John Clement J.
 - Sales, Augustus Vidal S.
+
+Data is stored on an XAMPP .php server, as it is scanned by the MFRC522 module.  
