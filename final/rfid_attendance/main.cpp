@@ -1,21 +1,18 @@
-#include <WiFi.h>
+#include <WiFi.h> 
 #include <HTTPClient.h> // for connecting to PHP server
 #include <ArduinoJson.h> // for sending packets
 #include <SPI.h>
 #include <MFRC522.h> // scanner library
 
-// 
-// PROJECT IN INTRODUCTION TO PROGRAMMING (Semester 1)
-// Cybersecurity - Group 1
-// Clement, Princess, Jessica, Diego, Augustus, Nouf
-// 
-
-// WiFi info (ie. wifi name and passwd)
+// WiFi credentials
 const char* SSID = "FBT_Students_5G";
 const char* PASSWORD = "fbtksa786";
 
-// API endpoint - change IP with current IP for running server
-const char* API_URL = "http://172.22.233.8/rfid_attendance/api/insert_log.php";
+// API endpoint
+const char* API_URL = "http://192.168.56.1/rfid_attendance/api/insert_log.php";
+
+// Audio feedback server
+const char* AUDIO_SERVER = "http://172.22.231.185:5000";
 
 // RFID-RC522 pins
 #define RST_PIN 27
@@ -23,7 +20,7 @@ const char* API_URL = "http://172.22.233.8/rfid_attendance/api/insert_log.php";
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
-// store student data
+// Store student data
 struct Student {
   String uid;
   String id;
@@ -57,16 +54,16 @@ Student students[] = {
 int numStudents = sizeof(students) / sizeof(students[0]);
 
 void setup() {
-  Serial.begin(115200); // Baud rate, always keep at 115200
+  Serial.begin(115200);
   delay(1000);
   
-  // ALL BELOW IS MADE TO BE SHOWN ON ARDUINO IDE'S SERIAL MONITOR, NOT ON A SCREEN MODULE
+   // ALL BELOW IS MADE TO BE SHOWN ON ARDUINO IDE'S SERIAL MONITOR, NOT ON A SCREEN MODULE
 
   Serial.println("\n=================================");
   Serial.println("ESP32 RFID Attendance System");
   Serial.println("=================================");
   
-  // initialize SPI and MFRC522
+  // Initialize SPI and MFRC522
   SPI.begin();
   mfrc522.PCD_Init();
   delay(4);
@@ -75,10 +72,10 @@ void setup() {
   mfrc522.PCD_DumpVersionToSerial();
   Serial.println("RFID Reader initialized");
   
-  // connect to WiFi
+  // Connect to WiFi
   Serial.println("\n--- WiFi Connection ---");
   connectToWiFi();
-
+  
   Serial.println("\n=================================");
   Serial.println("System Ready! Waiting for cards...");
   Serial.println("=================================\n");
@@ -91,12 +88,15 @@ void loop() {
     return;
   }
   
-  // get card UID
+  // Get card UID
   String cardUID = getCardUID();
   Serial.println("\n--- Card Detected ---");
   Serial.println("UID: " + cardUID);
   
-  // find student
+  // Play scan sound
+  playSound("scan");
+  
+  // Find student
   Student* student = findStudentByUID(cardUID);
   
   if (student != nullptr) {
@@ -104,18 +104,21 @@ void loop() {
     Serial.println("Name: " + student->name);
     Serial.println("Status: Registered ✓");
     
-    // send to database API
+    // Send to database
     Serial.println("\nSending to database...");
     bool success = sendLog(student->id, student->name);
     
     if (success) {
       Serial.println("✓ Attendance recorded!");
+      playSound("success");
     } else {
       Serial.println("✗ Failed to record");
+      playSound("error");
     }
   } else {
     Serial.println("Status: NOT REGISTERED ✗");
     Serial.println("Add: {\"" + cardUID + "\", \"STUDENT_ID\", \"STUDENT_NAME\"},");
+    playSound("error");
   }
   
   Serial.println("---------------------\n");
@@ -174,15 +177,40 @@ Student* findStudentByUID(String uid) {
   return nullptr;
 }
 
+void playSound(String soundType) {
+  if (WiFi.status() != WL_CONNECTED) return;
+  
+  HTTPClient http;
+  String url = String(AUDIO_SERVER) + "/sound/" + soundType;
+  
+  http.begin(url);
+  http.setTimeout(1000);
+  http.POST("");
+  http.end();
+}
+
 bool sendLog(String studentId, String studentName) {
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println("✗ WiFi not connected");
     return false;
   }
   
+  Serial.println("\n--- DEBUG: Sending Data ---");
+  Serial.print("WiFi Status: Connected (");
+  Serial.print(WiFi.localIP());
+  Serial.println(")");
+  
   HTTPClient http;
   http.setTimeout(10000);
-  http.begin(API_URL);
+  
+  Serial.print("Connecting to: ");
+  Serial.println(API_URL);
+  
+  if (!http.begin(API_URL)) {
+    Serial.println("✗ Failed to begin HTTP connection");
+    return false;
+  }
+  
   http.addHeader("Content-Type", "application/json");
   
   // Create JSON payload
@@ -193,30 +221,40 @@ bool sendLog(String studentId, String studentName) {
   String jsonPayload;
   serializeJson(doc, jsonPayload);
   
-  Serial.println("Payload: " + jsonPayload);
-  Serial.print("Sending to: ");
-  Serial.println(API_URL);
+  Serial.print("Payload: ");
+  Serial.println(jsonPayload);
+  Serial.print("Payload Length: ");
+  Serial.println(jsonPayload.length());
   
   // Send POST request
+  Serial.println("Sending POST request...");
   int httpResponseCode = http.POST(jsonPayload);
+  
+  Serial.print("Response Code: ");
+  Serial.println(httpResponseCode);
+  
   bool success = false;
   
-  // Shows response and packet details
+   // Shows response and packet details
   if (httpResponseCode > 0) {
     String response = http.getString();
-    Serial.print("Response Code: ");
-    Serial.println(httpResponseCode);
-    Serial.print("Response: ");
+    Serial.print("Response Body: ");
     Serial.println(response);
+    Serial.print("Response Length: ");
+    Serial.println(response.length());
     
-    if (httpResponseCode == 200) {
+    // Check if response contains success
+    if (httpResponseCode == 200 && response.indexOf("success") > -1) {
       success = true;
     }
   } else {
-    Serial.print("✗ HTTP Error: ");
+    Serial.print("✗ HTTP Error Code: ");
+    Serial.println(httpResponseCode);
+    Serial.print("Error Description: ");
     Serial.println(http.errorToString(httpResponseCode));
   }
   
   http.end();
+  Serial.println("--- DEBUG END ---\n");
   return success;
 }
