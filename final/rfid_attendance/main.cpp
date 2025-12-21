@@ -32,6 +32,7 @@ struct Student {
 
 // student database, update as needed - ID tag (scan card for ID first), student ID, student name
 Student students[] = {
+  // {"NFC ID", "FBT2500xx", "lastname, firstname"}, 
   {"B3 1A 14 0E", "FBT250051", "Catal, Diego"},
   {"04 5C 49 AD 72 26 81", "FBT250027", "Ibrahim, John Clement"},
   {"04 65 EF AD 72 26 81", "FBT250079", "Alobaid, Nouf"},
@@ -41,6 +42,17 @@ Student students[] = {
   {"04 65 81 AF 72 26 81", "FBT250063", "Villanueva, Yadha"},
   {"04 BF 9B AF 72 26 81", "FBT250044", "Bulanadi, Azel"},
   {"04 7F 12 AF 72 26 81", "FBT250033", "Tanael, Salah Eldeen"},
+  {"04 3C 86 AF 72 26 81", "FBT250030", "Muhammad Umar Ayubb"},
+  {"xx", "FBT250019", "Talens, Nathaniel Josemari"},
+  {"xx", "FBT250002", "Tejada, Abdulaziz Sara"},
+  {"xx", "FBT250068", "Mohammad Abrar Khan"},
+  {"xx", "FBT250065", "Muhammad Basil Shahid"},
+  {"xx", "FBT250004", "Dicuangco, Justine Noel"},
+  {"xx", "FBT250003", "Dicuangco, Emmanuel"},
+  {"xx", "FBT2500--", "Hassen Abduljalil Wabe"},
+  {"xx", "FBT2500--", "Wossan Kadi Tuna"},
+  {"xx", "FBT250053", "Khalid Waleed Suliman"},
+  {"xx", "FBT250086", "Druja, Mark Rowel"},
 };
 int numStudents = sizeof(students) / sizeof(students[0]);
 
