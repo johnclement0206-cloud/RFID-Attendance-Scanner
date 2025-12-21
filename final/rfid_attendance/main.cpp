@@ -60,6 +60,8 @@ void setup() {
   Serial.begin(115200); // Baud rate, always keep at 115200
   delay(1000);
   
+  // ALL BELOW IS MADE TO BE SHOWN ON ARDUINO IDE'S SERIAL MONITOR, NOT ON A SCREEN MODULE
+
   Serial.println("\n=================================");
   Serial.println("ESP32 RFID Attendance System");
   Serial.println("=================================");
@@ -199,6 +201,7 @@ bool sendLog(String studentId, String studentName) {
   int httpResponseCode = http.POST(jsonPayload);
   bool success = false;
   
+  // Shows response and packet details
   if (httpResponseCode > 0) {
     String response = http.getString();
     Serial.print("Response Code: ");
