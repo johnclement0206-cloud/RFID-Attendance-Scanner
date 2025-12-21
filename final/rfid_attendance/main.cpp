@@ -40,6 +40,7 @@ Student students[] = {
   {"04 BF 9B AF 72 26 81", "FBT250044", "Bulanadi, Azel"},
   {"04 7F 12 AF 72 26 81", "FBT250033", "Tanael, Salah Eldeen"},
   {"04 3C 86 AF 72 26 81", "FBT250030", "Muhammad Umar Ayubb"},
+  {"xx", "FBT25009", "Tanael, Amir Abdullah"},
   {"xx", "FBT250019", "Talens, Nathaniel Josemari"},
   {"xx", "FBT250002", "Tejada, Abdulaziz Sara"},
   {"xx", "FBT250068", "Mohammad Abrar Khan"},
